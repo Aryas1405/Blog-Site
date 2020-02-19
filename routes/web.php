@@ -28,7 +28,8 @@ Route::middleware(['auth', 'admins'])->group(function ()
 Route::get('/blogs/recycle', 'BlogController@recycle')->name('blogs.recycle');
 
 
-Route::resource('categories', 'CategoryController');
+Route::resource('categories', 'CategoryController')->except('show');
+Route::get('categories/{slug}', 'CategoryController@show')->name('categories.show');
 Route::resource('blogs', 'BlogController');
 Route::resource('tags', 'TagController');
 Route::resource('roles', 'RoleController');

@@ -69,6 +69,7 @@ class CategoryController extends Controller
          ]);
         $category=new Category;
         $category->name=$request->name;
+        $category->slug = $this->slugify($request->name, 'categories');
         $category->description=$request->description;
         $category->user_id=Auth::user()->id;
         $category->save();
@@ -82,10 +83,11 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show($slug)
     {
         abort_if(!Auth::user()->hasPermission('read-categories'), 403);
-
+        $category=Category::where('slug',$slug)->first();
+      
      
         return view('Category/show')->withCategory($category);
     }
@@ -122,6 +124,7 @@ class CategoryController extends Controller
         
         $category->name=$request->name;
         $category->description=$request->description;
+        $category->slug = $this->slugify($request->name, 'categories');
         $category->save();   
         return redirect()->route('categories.index')->with('success', 'Category Successfully Updated');;
     }

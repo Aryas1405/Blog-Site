@@ -47,7 +47,7 @@
     <td>{{ $category->updated_at }}</td>
     <td class="form-group row">
     @permission('read-categories')
-    <a href="{{route('categories.show',$category)}}"><button class="btn btn-success" style="margin-left:10px;">Show</button></a>
+    <a href="{{route('categories.show',$category->slug)}}"><button class="btn btn-success" style="margin-left:10px;">Show</button></a>
    @endpermission
 
     @permission('update-categories')
