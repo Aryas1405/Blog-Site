@@ -3,8 +3,8 @@
 @section('content')
 <div class="jumbotron">
 <div class="row">
-<a class="btn btn-success" href="" style="margin-left:700px;">Deleted Blogs()</a>
-<a class="btn btn-success" href="" style="margin-left:10px;">Deleted Tags()</a>
+<a class="btn btn-success" href="{{route('blogs.recycle')}}" style="margin-left:700px;">Deleted Blogs()</a>
+<a class="btn btn-success" href="{{route('tags.recycle')}}" style="margin-left:10px;">Deleted Tags()</a>
 </div>
 <h3 stlye="text-align:center">Deleted-categories()</h3>
 <table class="col-sm-10">

@@ -21,6 +21,19 @@ class BlogController extends Controller
         $tags=Tag::onlyTrashed()->get();
         return view('Recycle.recycle_blog')->withBlogs($blogs)->withCategories($categories)->withTags($tags);
     }
+    public function categoryrecycle()
+    {
+        $categories=Category::onlyTrashed()->get();
+        return view('Recycle.recycle_category')->withCategories($categories);
+    }
+    public function tagrecycle()
+    {
+        $tags=Tag::onlyTrashed()->get();
+        return view('Recycle.recycle_tag')->withTags($tags);
+    }
+    
+    
+
     /**
      * Display a listing of the resource.
      *

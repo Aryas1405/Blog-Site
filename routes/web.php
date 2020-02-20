@@ -26,6 +26,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::middleware(['auth', 'admins'])->group(function ()
 {
 Route::get('/blogs/recycle', 'BlogController@recycle')->name('blogs.recycle');
+Route::get('/categories/recycle', 'BlogController@categoryrecycle')->name('categories.recycle');
+Route::get('/tags/recycle', 'BlogController@tagrecycle')->name('tags.recycle');
 
 
 Route::resource('categories', 'CategoryController')->except('show');

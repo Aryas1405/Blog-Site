@@ -30,28 +30,150 @@ class CategoryController extends Controller
             
             //return view('Category.index')->withCategories($categories)->withSearchC($searchC)->withSearchB($searchB);
             return $this->processResponse($categories,'success');
-            
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
+        }
+        
+        /**
+         * Show the form for creating a new resource.
+         *
+         * @return \Illuminate\Http\Response
+         */
+        public function create()
+        {
+            //
+        }
+        
+        /**
+         * Store a newly created resource in storage.
+         *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    // public function mystore(Request $request)
+    // {
+    //     $name=$request->name;
+    //     // dd($name);
+    //     $nameFind=Category::where('name',$name)->first();
+       
+    //     if(!$nameFind || $request->has('id'))
+    //     {
+    //         if(!$request->has('id'))
+    //         {
+           
+    //         $request->validate([
+    //             'name' => 'required|unique:categories,name',
+    //             'description' => 'required',
+    //          ]);    
+    //          $category=new Category;
+    //         }
+    //         else
+    //         {
+    //             if($nameFind)   
+    //             {
+    //             if($nameFind->id==$request->id)//checking if the updated category name is present in db:table and both updated name &$nameFind are same
+    //            {
+    //             $request->validate([
+    //                 'name' => 'required|unique:categories,name,'.$request->id,
+    //                 'description' => 'required',
+    //                 ]);
+    //                 $category=Category::find($request->id);
+    //             }
+
+   
+    //             else //another cat.name available that  conflict the updated name 
+    //             {
+    //                 return $this->processResponse($nameFind,'success', 'Category namee already taken..!!.. edit/add a different `name` ');
+
+    //             }  
+    //         }
+    //         else
+    //         {
+    //             $category=Category::find($request->id);
+
+    //         }
+    //         }
+    //             $category->name=$request->name;
+    //             $category->slug = $this->slugify($request->name, 'categories');
+    //             $category->description=$request->description;
+    //             $category->user_id=1;
+    //             $category->save();
+                
+    //             return $this->processResponse($category,'success', 'Category added');
+        
+    //     }
+    //     else
+    //     {
+    //         return $this->processResponse($nameFind,'success', 'Category namee already taken..!!.. edit/add a different `name` ');
+    //     }
+    // }
+    public function storeupdate(Request $request)
     {
-        //
+        $exist=$request->name;
+        $isDuplicate=Category::where('name', $exist)->first();
+        if(!$isDuplicate || $request->has('id'))
+        
+        {
+        if(!$request->has('id')) {
+
+            $request->validate([
+                'name' => 'required|unique:categories,name',
+                'description' => 'required',
+            ]);
+        } 
+        
+        else {
+           
+            if($isDuplicate)
+            {
+            if($isDuplicate->id==$request->id)
+            {
+
+            $request->validate([
+                'name' => 'required|unique:categories,name,'.$request->id,
+                'description' => 'required',
+            ]);
+            }
+            else{
+                return $this->processResponse(null,'success', 'Category already exist111');
+
+            }
+        }
+        else{
+            $request->validate([
+                'name' => 'required|unique:categories,name,'.$request->id,
+                'description' => 'required',
+                ]);
+
+        }
+            
+        }
+        
+
+        // if($request->has('slug'))
+        // {
+        //     $slug = $this->slugify($request->name, 'categories');
+        // };
+     
+           
+        $category = Category::updateOrCreate(
+            
+            ['id' => $request->id],
+            [
+            'user_id' => 1,
+            'name' => $request->name,
+            'slug' => $this->slugify($request->name, 'categories'),
+
+            'description' => $request->description
+            ]
+        );
+
+
+        return $this->processResponse($category,'success', 'Category created');
+    }
+    else 
+    {
+        return $this->processResponse(null,'success', 'Category already exist');
+
+    }
     }
 
     /**
@@ -100,7 +222,7 @@ class CategoryController extends Controller
         if($category->blogs->count()>0)
         {
         return $this->processResponse(null,'error','This category has linked blogs, cannot be deleted');  
-    }
+        }
     
         $category->delete();
         return $this->processResponse(null,'success','category deleted');  
