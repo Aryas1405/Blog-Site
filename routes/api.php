@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('categories_api/index','api\CategoryController@index');
+Route::get('categories_api/index','api\CategoryController@index')->middleware('auth:api');
 Route::delete('categories_api/delete/{category}','api\CategoryController@destroy');
 // Route::post('categories_api/store','api\CategoryController@mystore');
 Route::post('categories_api/store','api\CategoryController@storeupdate');
@@ -24,3 +24,8 @@ Route::post('categories_api/store','api\CategoryController@storeupdate');
 Route::get('blogs_api/index','api\BlogController@index');
 Route::delete('blogs_api/delete/{id}','api\BlogController@destroy');
 Route::post('blogs_api/store','api\BlogController@storeupdate');
+
+Route::post('/login','api\AuthController@login');
+Route::post('/logout','api\AuthController@logout')->middleware('auth:api');
+Route::post('/register','api\AuthController@register');
+

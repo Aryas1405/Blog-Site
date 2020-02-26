@@ -107,13 +107,13 @@ class BlogController extends Controller
             $blog->description=$request->description;
             $blog->category_id=$request->category_id;
             $blog->user_id=1;
-            // if($request->file('image'))
+            if($request->file('image'))
 
-            // {
-            //     $filetitle = $this->uploadImage($request->file('image'));
+            {
+                $filetitle = $this->uploadImage($request->file('image'));
     
-            //     $blog->image = $filetitle;
-            // }
+                $blog->image = $filetitle;
+            }
     
             $blog->save();
                 
@@ -132,6 +132,34 @@ class BlogController extends Controller
      * @param  \App\Blog  $blog
      * @return \Illuminate\Http\Response
      */
+    public function deleteOnlyImage(Blog $blog)
+    {
+        if($blog->image)
+        {
+            $blog->image=null;
+            $blog->save();
+            $this->deleteImage($blog->image);
+        }
+        return redirect()->route('blogs');
+
+    }
+
+    public function uploadImage($image)
+    {
+        $random_name=time();
+        $extension=$image->getClientOriginalExtension();
+        $filename=$random_name.'.'.$extension;
+        Photo::make($image)->save(public_path('image/'. $filename));
+        return $filename;
+    }
+    public function deleteImage($image)
+    {
+        $filename = public_path('image/' . $image);
+
+        unlink($filename);
+
+    }
+    
     public function show(Blog $blog)
     {
         //
@@ -168,7 +196,7 @@ class BlogController extends Controller
      */
     public function destroy($id)
     {
-        dump($id);
+       
         $blog=Blog::find($id);
       
         if($blog)
@@ -178,10 +206,11 @@ class BlogController extends Controller
         }
         else
         {
-            $blogs=Blog::onlyTrashed()->where('id',$id)->get();
-            
-            if($blogs->has('id'))
-            {
+            $blogs=Blog::onlyTrashed()->where('id',$id)->first('id');
+            echo ($blogs);
+            if($blogs)
+            {   
+
                 return $this->processResponse($blogs,'error','blog already soft deleted ');  
             }
             else
