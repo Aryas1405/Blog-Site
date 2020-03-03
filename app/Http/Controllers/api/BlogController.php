@@ -35,13 +35,9 @@ class BlogController extends Controller
         ->with('tags')
         ->with('category')
         ->paginate(6);
-       
-        // return view('Blog/index')->withBlogs($blogs)->withSearchB($searchB)->withCategory($category);
-        // return $blogs;
-        return $this->processResponse($blogs,'success');
 
-   
-    }
+        return $this->processResponse($blogs,'success');
+ }
 
     /**
      * Show the form for creating a new resource.
